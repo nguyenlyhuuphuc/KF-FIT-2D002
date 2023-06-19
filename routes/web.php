@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,12 +31,67 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('home', function (){
-    return '<h1>Home</h1>';
-});
+// Route::get('home', function (){
+//     return '<h1>Home</h1>';
+// });
 
-Route::get('admin', function (){
-    return '<h1>Admin</h1>';
-})->name('admin');
+// Route::get('admin', function (){
+//     return '<h1>Admin</h1>';
+// })->name('admin');
 
 require __DIR__.'/auth.php';
+
+Route::get('home',function (){
+    return view('client.pages.home');
+})->name('home');
+
+Route::get('about-us',function (){
+    return view('about_us');
+});
+Route::get('contact',function (){
+    return view('client.pages.contact');
+});
+
+Route::get('blog', function(){
+    return view('client.pages.blog');
+});
+Route::get('product-list', function(){
+    return view('client.pages.product_list');
+});
+Route::get('product-detail', function(){
+    return view('client.pages.product_detail');
+});
+Route::get('cart', function(){
+    return view('client.pages.cart');
+});
+Route::get('checkout', function(){
+    return view('client.pages.checkout');
+});
+
+
+Route::middleware('auth.admin')->name('admin.')->group(function () {
+    Route::get('admin',function (){
+        return view('admin.pages.dashboard');
+    })->name('admin');
+
+    Route::get('admin/user',function (){
+        return view('admin.pages.user');
+    })->name('user');
+
+    Route::get('admin/blog',function (){
+        return view('admin.pages.blog');
+    })->name('blog');
+
+    Route::get('admin/product',function (){
+        return view('admin.pages.product');
+    })->name('product');
+});
+
+
+Route::get('chivas',function (){
+    return '<h1>chivas</h1>';
+})->middleware('age.18');
+
+Route::get('cocacola',function (){
+    return '<h1>cocacola</h1>';
+});
