@@ -14,9 +14,17 @@ return new class extends Migration
         Schema::create('product', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255)->nullable();
+            $table->string('slug', 255)->nullable();
             $table->float('price')->nullable()->unsigned();
+            $table->float('discount_price')->nullable()->unsigned();
             $table->text('description')->nullable();
+            $table->text('short_description')->nullable();
+            $table->text('information')->nullable();
+            $table->integer('qty')->unsigned();
+            $table->string('shipping', 255)->nullable();
+            $table->float('weight')->nullable()->unsigned();
             $table->string('image_url', 255)->nullable();
+            $table->boolean('status')->default(1);
 
             //Buoc 1 - tao field
             // $table->bigInteger('product_category_id')->unsigned();
@@ -36,3 +44,4 @@ return new class extends Migration
         Schema::dropIfExists('product');
     }
 };
+

@@ -85,7 +85,20 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
     Route::get('admin/product',function (){
         return view('admin.pages.product');
     })->name('product');
+
+    Route::get('admin/product/create', function (){
+        return view('admin.product.create');
+    })->name('product.create');
+
+    Route::get('admin/product_category', function (){
+        return view('admin.product_category.list');
+    });
+
+    Route::get('admin/product_category/create', function (){
+        return view('admin.product_category.create');
+    });
 });
+
 
 
 Route::get('chivas',function (){

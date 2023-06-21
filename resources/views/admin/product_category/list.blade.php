@@ -5,7 +5,7 @@
     <section class="content">
         <a class="btn btn-primary"
         href="{{ route('admin.product.create') }}">
-        Create Product</a>
+        Create Product Category</a>
     </section>
 </div>
 @endsection
