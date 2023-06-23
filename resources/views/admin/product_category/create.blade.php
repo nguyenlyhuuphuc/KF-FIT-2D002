@@ -29,23 +29,39 @@
                 <div class="card-header">
                   <h3 class="card-title">Create Product Category</h3>
                 </div>
-                <form role="form">
+                <form role="form" method="POST" action="{{ route('admin.product_category.save') }}">
+                    @csrf
                   <div class="card-body">
                     <div class="form-group">
                       <label for="exampleInputEmail1">Name</label>
-                      <input type="text" class="form-control" id="name" placeholder="Name">
+                      <input type="text" name="name" class="form-control {{ $errors->any('name') ? 'is-invalid' : '' }}" id="name" placeholder="Name">
+                    </div>
+                    <div>
+                        @error('name')
+                            <small style="color: red">{{ $message }}</small>
+                        @enderror
                     </div>
                     <div class="form-group">
                       <label for="slug">Slug</label>
-                      <input type="text" class="form-control" id="slug" placeholder="Slug">
+                      <input type="text" name="slug" class="form-control {{ $errors->any('name') ? 'is-invalid' : '' }}" id="slug" placeholder="Slug">
+                    </div>
+                    <div>
+                        @error('slug')
+                            <small style="color: red">{{ $message }}</small>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="status">Status</label>
-                        <select name="status" class="form-select form-control" id="status">
+                        <select name="status" class="form-select form-control {{ $errors->any('name') ? 'is-invalid' : '' }}" id="status">
                             <option value="">---Please Select---</option>
                             <option value="1">Show</option>
                             <option value="0">Hide</option>
                         </select>
+                    </div>
+                    <div>
+                        @error('status')
+                            <small style="color: red">{{ $message }}</small>
+                        @enderror
                     </div>
 
                   <div class="card-footer">
@@ -60,4 +76,29 @@
     </section>
     <!-- /.content -->
   </div>
+@endsection
+
+
+@section('js-custom')
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('#name').on('keyup',function(){
+                let name = $(this).val();
+                $.ajax({
+                    method: 'POST', //method of form
+                    url: "{{ route('admin.product_category.slug') }}", // action of form
+                    data: {
+                        name: name,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(res) {
+                        $('#slug').val(res.slug);
+                    },
+                    error: function(res) {
+
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

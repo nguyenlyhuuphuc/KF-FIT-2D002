@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\ProfileController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -92,11 +93,17 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
 
     Route::get('admin/product_category', function (){
         return view('admin.product_category.list');
-    });
+    })->name('product_category.list');
 
     Route::get('admin/product_category/create', function (){
         return view('admin.product_category.create');
-    });
+    })->name('product_category.create');
+
+    Route::post('admin/product_category/save', [ProductCategoryController::class, 'store'])
+    ->name('product_category.save');
+
+    Route::post('admin/product_category/slug', [ProductCategoryController::class, 'getSlug'])
+    ->name('product_category.slug');
 });
 
 
