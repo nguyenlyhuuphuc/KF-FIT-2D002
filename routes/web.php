@@ -91,9 +91,7 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
         return view('admin.product.create');
     })->name('product.create');
 
-    Route::get('admin/product_category', function (){
-        return view('admin.product_category.list');
-    })->name('product_category.list');
+    Route::get('admin/product_category', [ProductCategoryController::class, 'index'])->name('product_category.list');
 
     Route::get('admin/product_category/create', function (){
         return view('admin.product_category.create');
@@ -104,6 +102,11 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
 
     Route::post('admin/product_category/slug', [ProductCategoryController::class, 'getSlug'])
     ->name('product_category.slug');
+
+    Route::get('admin/product_category/{id}', [ProductCategoryController::class, 'detail'])->name('product_category.detail');
+
+    Route::post('admin/product_category/update', [ProductCategoryController::class, 'update'])
+    ->name('product_category.update');
 });
 
 
