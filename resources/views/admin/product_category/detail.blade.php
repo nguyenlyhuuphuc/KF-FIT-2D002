@@ -22,7 +22,6 @@
 
     <!-- Main content -->
     <section class="content">
-        {{-- {{ dd($productCategory) }} --}}
       <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -30,7 +29,7 @@
                 <div class="card-header">
                   <h3 class="card-title">Update Product Category</h3>
                 </div>
-                <form role="form" method="POST" action="{{ route('admin.product_category.update') }}">
+                <form role="form" method="POST" action="{{ route('admin.product_category.update', ['id' => $productCategory[0]->id ]) }}">
                     @csrf
                   <div class="card-body">
                     <div class="form-group">
@@ -66,7 +65,7 @@
                     </div>
 
                   <div class="card-footer">
-                    <input type="hidden" name="id" value="{{ $productCategory[0]->id }}" />
+                    {{-- <input type="hidden" name="id" value="{{ $productCategory[0]->id }}" /> --}}
                     <button type="submit" class="btn btn-primary">Update</button>
                   </div>
                 </form>

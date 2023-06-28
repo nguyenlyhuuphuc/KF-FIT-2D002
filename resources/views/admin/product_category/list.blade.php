@@ -48,8 +48,11 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.product_category.detail', ['id' => $productCategory->id]) }}" class="btn btn-primary">Edit</a>
-                                    <a class="btn btn-danger">Delete</a>
+                                    <form method="post" action="{{ route('admin.product_category.delete', ['id' => $productCategory->id]) }}">
+                                        @csrf
+                                        <a href="{{ route('admin.product_category.detail', ['id' => $productCategory->id]) }}" class="btn btn-primary">Edit</a>
+                                        <button onclick="return confirm('Are you sure?')" type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
@@ -62,13 +65,14 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer clearfix">
-                  <ul class="pagination pagination-sm m-0 float-right">
+                    {{ $productCategories->links() }}
+                  {{-- <ul class="pagination pagination-sm m-0 float-right">
                     <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    @for ($page = 1; $page <= $numberOfPage; $page++)
+                        <li class="page-item"><a class="page-link" href="?page={{ $page }}">{{ $page }}</a></li>
+                    @endfor
                     <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                  </ul>
+                  </ul> --}}
                 </div>
               </div>
               <!-- /.card -->

@@ -105,8 +105,11 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
 
     Route::get('admin/product_category/{id}', [ProductCategoryController::class, 'detail'])->name('product_category.detail');
 
-    Route::post('admin/product_category/update', [ProductCategoryController::class, 'update'])
+    Route::post('admin/product_category/update/{id}', [ProductCategoryController::class, 'update'])
     ->name('product_category.update');
+
+    Route::post('admin/product_category/delete/{id}', [ProductCategoryController::class, 'destroy'])
+    ->name('product_category.delete');
 });
 
 
