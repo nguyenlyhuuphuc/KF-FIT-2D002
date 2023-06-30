@@ -65,7 +65,8 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer clearfix">
-                    {{ $productCategories->links() }}
+                    {{-- vendor\laravel\framework\src\Illuminate\Pagination\resources\views\bootstrap-5.blade.php --}}
+                    {{ $productCategories->links('admin.pagination.custom') }}
                   {{-- <ul class="pagination pagination-sm m-0 float-right">
                     <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
                     @for ($page = 1; $page <= $numberOfPage; $page++)
