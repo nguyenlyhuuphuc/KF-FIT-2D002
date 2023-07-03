@@ -84,9 +84,9 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
         return view('admin.pages.blog');
     })->name('blog');
 
-    Route::get('admin/product',function (){
-        return view('admin.pages.product');
-    })->name('product');
+    // Route::get('admin/product',function (){
+    //     return view('admin.pages.product');
+    // })->name('product');
 
     // Route::get('admin/product/create',[ProductController::class, 'create'])->name('product.create');
     // Route::post('admin/product/store',[ProductController::class, 'store'])->name('product.store');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +15,20 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('admin.pages.product');
+        //Eloquent
+        $products = Product::paginate(config('myconfig.item_per_page'));
+
+        //QueryBuilder
+        //SELECT product.*, product_category.name
+        // FROM product INNER JOIN product_category
+        //  ON product_category.id = product.product_category_id;
+
+        // $products = DB::table('product')
+        // ->join('product_category', 'product_category.id', '=','product.product_category_id')
+        // ->select('product.*', 'product_category.name as product_category_name')
+        // ->paginate(config('myconfig.item_per_page'));
+
+        return view('admin.product.list', ['products' => $products]);
     }
 
     /**
@@ -24,8 +38,13 @@ class ProductController extends Controller
     {
         //SQL Raw
         // $productCategories = DB::select('select * from product_category where status = 1');
+
         //Query Builder
-        $productCategories = DB::table('product_category')->where('status', 1)->get();
+        // $productCategories = DB::table('product_category')->where('status', 1)->get();
+
+        //Eloquent
+        // $productCategories = ProductCategory::all();
+        $productCategories = ProductCategory::where('status', 1)->get();
 
         return view('admin.product.create')->with('productCategories', $productCategories);
     }
@@ -46,6 +65,15 @@ class ProductController extends Controller
         //Query Builder
         // $check = DB::table('product')->insert(['name' => $request->name]);
 
+        $fileName = null;
+        if ($request->hasFile('image_url')) {
+            $originName = $request->file('image_url')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('image_url')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+            $request->file('image_url')->move(public_path('images'), $fileName);
+        }
+
         $product = Product::create([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -58,7 +86,8 @@ class ProductController extends Controller
             'shipping' => $request->shipping,
             'weight' => $request->weight,
             'status' => $request->status,
-            'product_category_id' => $request->product_category_id
+            'product_category_id' => $request->product_category_id,
+            'image_url' => $fileName
         ]);
 
         $message = $product ? 'create success' : 'create failed';

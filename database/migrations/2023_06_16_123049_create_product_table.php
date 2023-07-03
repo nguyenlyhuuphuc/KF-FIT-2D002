@@ -32,7 +32,7 @@ return new class extends Migration
             //Buoc 2 - chi dinh field do la khoa ngoai
             $table->foreign('product_category_id')->references('id')->on('product_category');
 
-            $table->timestamps();
+            $table->timestamps(); //created_at updated_at
         });
     }
 
