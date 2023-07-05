@@ -195,6 +195,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('admin.product_category.list') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Product Category</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.product.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Product</p>

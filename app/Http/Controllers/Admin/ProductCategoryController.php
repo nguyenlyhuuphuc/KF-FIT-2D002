@@ -3,21 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductCategoryRequest;
+use App\Http\Requests\UpdateProductCategoryRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProductCategoryController extends Controller
 {
-    public function store(Request $request){
+    public function store(StoreProductCategoryRequest $request){
         //Validate data from client
-        $request->validate([
-            'name' => 'required|min:1|max:255|string|unique:product_category,name',
-            'slug' => 'required|min:1|max:255|string',
-            'status' => 'required|boolean'
-        ],[
-            'name.required' => 'Ten buoc phai nhap !'
-        ]);
+        // $request->validate([
+        //     'name' => 'required|min:1|max:255|string|unique:product_category,name',
+        //     'slug' => 'required|min:1|max:255|string',
+        //     'status' => 'required|boolean'
+        // ],[
+        //     'name.required' => 'Ten buoc phai nhap !'
+        // ]);
 
         //SQL RAW
         // $check = DB::insert('insert into product_category(name,slug,status) values (?, ?, ?)',
@@ -74,15 +76,15 @@ class ProductCategoryController extends Controller
         return view('admin.product_category.detail', ['productCategory' => $productCategory]);
     }
 
-    public function update(Request $request, string $id){
+    public function update(UpdateProductCategoryRequest $request, string $id){
         //validate input from user
-        $request->validate([
-            'name' => 'required|min:1|max:255|string|unique:product_category,name,'.$id,
-            'slug' => 'required|min:1|max:255|string',
-            'status' => 'required|boolean'
-        ],[
-            'name.required' => 'Ten buoc phai nhap !'
-        ]);
+        // $request->validate([
+        //     'name' => 'required|min:1|max:255|string|unique:product_category,name,'.$id,
+        //     'slug' => 'required|min:1|max:255|string',
+        //     'status' => 'required|boolean'
+        // ],[
+        //     'name.required' => 'Ten buoc phai nhap !'
+        // ]);
 
         //Update into DB - SQL Raw
         // $check = DB::update('UPDATE product_category SET name = ?, slug = ?, status = ? where id = ?',

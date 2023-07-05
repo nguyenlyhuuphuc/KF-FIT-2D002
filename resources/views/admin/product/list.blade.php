@@ -20,10 +20,17 @@
               <div class="card">
                 <div class="card-header">
                   <h3 class="card-title">Product</h3>
+
                   <div class="d-flex justify-content-end">
                     <a class="btn btn-primary"href="{{ route('admin.product.create') }}">Create</a>
                 </div>
                 </div>
+                <div>
+                    <form method="GET">
+                        <input type="text" placeholder="Search..." name="keyword" value="{{ is_null(request()->keyword) ? '' : request()->keyword }}">
+                        <button type="submit">Search</button>
+                    </form>
+                  </div>
                 <!-- /.card-header -->
                 <div class="card-body">
                   <table class="table table-bordered">
@@ -63,6 +70,7 @@
                                 <td>
                                     <form method="post" action="{{ route('admin.product.destroy', ['product' => $product->id]) }}">
                                         @csrf
+                                        @method('delete')
                                         <a href="{{ route('admin.product.show', ['product' => $product->id]) }}" class="btn btn-primary">Edit</a>
                                         <button onclick="return confirm('Are you sure?')" type="submit" class="btn btn-danger">Delete</button>
                                     </form>
@@ -78,7 +86,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer clearfix">
-                    {{ $products->links() }}
+                    {{ $products->appends(request()->query())->links() }}
                 </div>
               </div>
               <!-- /.card -->
