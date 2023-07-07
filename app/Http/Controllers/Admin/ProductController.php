@@ -17,18 +17,51 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        // dd($request->all());
         $keyword = $request->keyword;
-        // dd($keyword);
-        //Eloquent
-        // $products = Product::paginate(config('myconfig.item_per_page'));
+        $status = $request->status;
+        $amountStart= $request->amount_start;
+        $amountEnd= $request->amount_end;
+        $sort = $request->sort;
 
-
-        if(is_null($keyword)){
-            $products = Product::paginate(config('myconfig.item_per_page'));
-        }else{
-            $products = Product::where('name', 'like', '%'.$keyword.'%')
-            ->paginate(config('myconfig.item_per_page'));
+        $filter = [];
+        if(!is_null($keyword)){
+            $filter[] = ['name', 'like', '%'.$keyword.'%'];
         }
+        if(!is_null($status)){
+            $filter[] = ['status', $status];
+        }
+        if(!is_null($amountStart) && !is_null($amountEnd))
+        {
+            $filter[] = ['price', '>=', $amountStart];
+            $filter[] = ['price', '<=', $amountEnd];
+        }
+
+        //Sort
+        $sortBy = ['id', 'desc'];
+        switch($sort){
+            // case 0:
+            //     $sortBy = ['id', 'desc'];
+            //     break;
+            case 1:
+                $sortBy = ['price', 'asc'];
+                break;
+            case 2:
+                $sortBy = ['price', 'desc'];
+                break;
+        }
+
+        $products = Product::where($filter)->orderBy($sortBy[0], $sortBy[1])->paginate(config('myconfig.item_per_page'));
+
+        // if(!is_null($amountStart) && !is_null($amountEnd))
+        // {
+        //     $products = Product::where($filter)
+        //     ->whereBetween('price', [$amountStart, $amountEnd])
+        //     ->paginate(config('myconfig.item_per_page'));
+        // }else{
+        //     $products = Product::where($filter)->paginate(config('myconfig.item_per_page'));
+        // }
+
 
         //QueryBuilder
         //SELECT product.*, product_category.name
@@ -40,7 +73,14 @@ class ProductController extends Controller
         // ->select('product.*', 'product_category.name as product_category_name')
         // ->paginate(config('myconfig.item_per_page'));
 
-        return view('admin.product.list', ['products' => $products]);
+        $maxPrice = Product::max('price');
+        $minPrice = Product::min('price');
+        return view('admin.product.list',
+        [
+            'products' => $products,
+            'maxPrice' => $maxPrice,
+            'minPrice' => $minPrice
+        ]);
     }
 
     /**

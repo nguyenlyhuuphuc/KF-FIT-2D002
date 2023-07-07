@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductCategoryRequest;
 use App\Http\Requests\UpdateProductCategoryRequest;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -65,8 +66,11 @@ class ProductCategoryController extends Controller
         // return view('admin.product_category.list',
         // compact('productCategories', 'numberOfPage'));
 
-        $productCategories = DB::table('product_category')
-        ->paginate(config('myconfig.item_per_page'));
+        // $productCategories = DB::table('product_category')
+        // ->paginate(config('myconfig.item_per_page'));
+
+        $productCategories = ProductCategory::paginate(config('myconfig.item_per_page'));
+
         return view('admin.product_category.list',compact('productCategories'));
     }
 

@@ -32,6 +32,7 @@
                         <th style="width: 10px">#</th>
                         <th>Name</th>
                         <th>Slug</th>
+                        <th>Number of child</th>
                         <th style="width: 40px">Status</th>
                         <th>Action</th>
                       </tr>
@@ -42,6 +43,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $productCategory->name }}</td>
                                 <td>{{ $productCategory->slug }}</td>
+                                <td>{{ $productCategory->products->count() }}</td>
                                 <td>
                                     <a class="btn btn-{{ $productCategory->status ? 'success' : 'danger' }}">
                                         {{ $productCategory->status ? 'Show' : 'Hide' }}
