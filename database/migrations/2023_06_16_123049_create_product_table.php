@@ -33,6 +33,7 @@ return new class extends Migration
             $table->foreign('product_category_id')->references('id')->on('product_category')->onDelete('cascade');
 
             $table->timestamps(); //created_at updated_at
+            $table->softDeletes(); //deleted_at
         });
     }
 

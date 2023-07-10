@@ -8,7 +8,8 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Pipeline\Pipeline as PipelinePipeline;
+use Illuminate\Support\Facades\Pipeline;
 
 class ProductController extends Controller
 {
@@ -17,41 +18,40 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->all());
-        $keyword = $request->keyword;
-        $status = $request->status;
-        $amountStart= $request->amount_start;
-        $amountEnd= $request->amount_end;
-        $sort = $request->sort;
+        // $keyword = $request->keyword;
+        // $status = $request->status;
+        // $amountStart= $request->amount_start;
+        // $amountEnd= $request->amount_end;
+        // $sort = $request->sort;
 
-        $filter = [];
-        if(!is_null($keyword)){
-            $filter[] = ['name', 'like', '%'.$keyword.'%'];
-        }
-        if(!is_null($status)){
-            $filter[] = ['status', $status];
-        }
-        if(!is_null($amountStart) && !is_null($amountEnd))
-        {
-            $filter[] = ['price', '>=', $amountStart];
-            $filter[] = ['price', '<=', $amountEnd];
-        }
+        // $filter = [];
+        // if(!is_null($keyword)){
+        //     $filter[] = ['name', 'like', '%'.$keyword.'%'];
+        // }
+        // //200
+        // if(!is_null($status)){
+        //     $filter[] = ['status', $status];
+        // }
+        // //100
+        // if(!is_null($amountStart) && !is_null($amountEnd))
+        // {
+        //     $filter[] = ['price', '>=', $amountStart];
+        //     $filter[] = ['price', '<=', $amountEnd];
+        // }
+        // //50
 
-        //Sort
-        $sortBy = ['id', 'desc'];
-        switch($sort){
-            // case 0:
-            //     $sortBy = ['id', 'desc'];
-            //     break;
-            case 1:
-                $sortBy = ['price', 'asc'];
-                break;
-            case 2:
-                $sortBy = ['price', 'desc'];
-                break;
-        }
+        // //Sort
+        // $sortBy = ['id', 'desc'];
+        // switch($sort){
+        //     case 1:
+        //         $sortBy = ['price', 'asc'];
+        //         break;
+        //     case 2:
+        //         $sortBy = ['price', 'desc'];
+        //         break;
+        // }
 
-        $products = Product::where($filter)->orderBy($sortBy[0], $sortBy[1])->paginate(config('myconfig.item_per_page'));
+        // $products = Product::where($filter)->orderBy($sortBy[0], $sortBy[1])->paginate(config('myconfig.item_per_page'));
 
         // if(!is_null($amountStart) && !is_null($amountEnd))
         // {
@@ -72,6 +72,26 @@ class ProductController extends Controller
         // ->join('product_category', 'product_category.id', '=','product.product_category_id')
         // ->select('product.*', 'product_category.name as product_category_name')
         // ->paginate(config('myconfig.item_per_page'));
+
+
+        $pipelines = [
+            \App\Filters\ByKeyword::class,
+            \App\Filters\ByStatus::class,
+            \App\Filters\ByMinMax::class,
+        ];
+
+        //use Illuminate\Support\Facades\Pipeline;
+
+        $pipeline = Pipeline::send(Product::query()->withTrashed())
+        ->through($pipelines)
+        ->thenReturn();
+
+        //use Illuminate\Pipeline\Pipeline
+        // $pipeline = app(PipelinePipeline::class)
+        // ->through($pipelines)
+        // ->thenReturn();
+
+        $products = $pipeline->paginate(config('myconfig.item_per_page'));
 
         $maxPrice = Product::max('price');
         $minPrice = Product::min('price');
@@ -232,5 +252,14 @@ class ProductController extends Controller
         $message = $check ? 'delete success' : 'delete failed';
 
         return redirect()->route('admin.product.index')->with('message', $message);
+    }
+
+    public function restore(string $product){
+        $product = Product::withTrashed()->find($product);
+        // $product->deleted_at = null;
+        // $product->save();
+        $product->restore();
+
+        return redirect()->route('admin.product.index')->with('message', 'Restore success');
     }
 }
