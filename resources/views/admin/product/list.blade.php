@@ -83,7 +83,8 @@
                                     @endphp
                                     <img src="{{ asset('images/'.$imageLink) }}" alt="{{ $product->name }}" width="150" height="150">
                                 </td>
-                                <td>{{ $product->category->name }}</td>
+                                {{-- <td>{{ $product->category->name }}</td>--}}
+                                <td>{{ $product->product_category_name }}</td>
                                 <td>
                                     <a class="btn btn-{{ $product->status ? 'success' : 'danger' }}">
                                         {{ $product->status ? 'Show' : 'Hide' }}
@@ -96,12 +97,12 @@
                                         <a href="{{ route('admin.product.show', ['product' => $product->id]) }}" class="btn btn-primary">Edit</a>
                                         <button onclick="return confirm('Are you sure?')" type="submit" class="btn btn-danger">Delete</button>
                                     </form>
-                                    @if($product->trashed())
+                                    {{-- @if($product->trashed()) --}}
                                         <form action="{{ route('admin.product.restore', ['product' => $product->id]) }}" method="POST">
                                             @csrf
                                             <button type="submit" class="btn btn-success">Restore</button>
                                         </form>
-                                    @endif
+                                    {{-- @endif --}}
                                 </td>
                             </tr>
                         @empty
@@ -117,6 +118,65 @@
                     {{ $products->appends(request()->query())->links() }}
                 </div>
               </div>
+
+              <h1>DataTable </h1>
+              <table id="product-datatable" class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Name</th>
+                        <th>Slug</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Image</th>
+                        <th>Product Category Name</th>
+                        <th style="width: 40px">Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($products as $product)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $product->name }}</td>
+                                <td>{{ $product->slug }}</td>
+                                <td>{{ number_format($product->price, 2) }}</td>
+                                <td>{!! $product->description !!}</td>
+                                <td>
+                                    @php
+                                        $imageLink = (is_null($product->image_url) || !file_exists("images/" . $product->image_url)) ? 'default-product-image.png' : $product->image_url;
+                                    @endphp
+                                    <img src="{{ asset('images/'.$imageLink) }}" alt="{{ $product->name }}" width="150" height="150">
+                                </td>
+                                {{-- <td>{{ $product->category->name }}</td>--}}
+                                <td>{{ $product->product_category_name }}</td>
+                                <td>
+                                    <a class="btn btn-{{ $product->status ? 'success' : 'danger' }}">
+                                        {{ $product->status ? 'Show' : 'Hide' }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <form method="POST" action="{{ route('admin.product.destroy', ['product' => $product->id]) }}">
+                                        @csrf
+                                        @method('delete')
+                                        <a href="{{ route('admin.product.show', ['product' => $product->id]) }}" class="btn btn-primary">Edit</a>
+                                        <button onclick="return confirm('Are you sure?')" type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                    {{-- @if($product->trashed()) --}}
+                                        <form action="{{ route('admin.product.restore', ['product' => $product->id]) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success">Restore</button>
+                                        </form>
+                                    {{-- @endif --}}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4">No Product</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                  </table>
               <!-- /.card -->
             </div>
           </div>
@@ -128,11 +188,12 @@
 @section('js-custom')
     <script type="text/javascript">
         $(document).ready(function(){
+
             $( "#slider-range" ).slider({
                 range: true,
                 min: {{ $minPrice }},
                 max: {{ $maxPrice }},
-                values: [ {{  request()->amount_start ?? 0 }}, {{  request()->amount_end ?? 0 }} ],
+                values: [ {{  request()->amount_start ?? 0 }}, {{  request()->amount_end ?? $maxPrice }} ],
                 slide: function( event, ui ) {
                     $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
                     $('#amount_start').val(ui.values[0]);

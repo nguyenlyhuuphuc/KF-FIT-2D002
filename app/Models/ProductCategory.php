@@ -13,6 +13,6 @@ class ProductCategory extends Model
     protected $table = 'product_category';
 
     public function products(){
-        return $this->hasMany(Product::class, 'product_category_id');
+        return $this->hasMany(Product::class, 'product_category_id')->withTrashed();
     }
 }

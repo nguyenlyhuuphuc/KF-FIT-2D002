@@ -5,7 +5,10 @@
         public function handle($request, \Closure $next)
         {
             $builder = $next($request);
-            if(request()->has('amount_start') && request()->has('amount_end')){
+            if(request()->has('amount_start')
+            && request()->has('amount_end')
+            && !empty(request()->query('amount_start'))
+            && !empty(request()->query('amount_end')) ){
                 return $builder
                 ->whereBetween('price',
                  [request()->query('amount_start'), request()->query('amount_end')]);

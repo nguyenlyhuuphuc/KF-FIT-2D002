@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\ProductController as ClientProductController;
 use App\Http\Controllers\ProfileController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -43,9 +45,7 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('home',function (){
-    return view('client.pages.home');
-})->name('home');
+Route::get('home', [HomeController::class, 'index'])->name('home');
 
 Route::get('about-us',function (){
     return view('about_us');
@@ -60,9 +60,8 @@ Route::get('blog', function(){
 Route::get('product-list', function(){
     return view('client.pages.product_list');
 });
-Route::get('product-detail', function(){
-    return view('client.pages.product_detail');
-});
+Route::get('product/{slug}', [ClientProductController::class, 'getProductBySlug'])->name('product.detail');
+
 Route::get('cart', function(){
     return view('client.pages.cart');
 });

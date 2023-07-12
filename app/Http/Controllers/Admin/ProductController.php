@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline as PipelinePipeline;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Pipeline;
 
 class ProductController extends Controller
@@ -80,7 +81,7 @@ class ProductController extends Controller
             \App\Filters\ByMinMax::class,
         ];
 
-        //use Illuminate\Support\Facades\Pipeline;
+        // //use Illuminate\Support\Facades\Pipeline;
 
         $pipeline = Pipeline::send(Product::query()->withTrashed())
         ->through($pipelines)
@@ -92,9 +93,18 @@ class ProductController extends Controller
         // ->thenReturn();
 
         $products = $pipeline->paginate(config('myconfig.item_per_page'));
+        // $products = $pipeline->get();
+        // $products = Product::with('category')->paginate(999);
+
+        // $products = DB::table('product')
+        // ->join('product_category', 'product.product_category_id', '=', 'product_category.id')
+        // ->select('product.*', 'product_category.name as product_category_name')
+        // ->paginate(999);
+
 
         $maxPrice = Product::max('price');
         $minPrice = Product::min('price');
+
         return view('admin.product.list',
         [
             'products' => $products,

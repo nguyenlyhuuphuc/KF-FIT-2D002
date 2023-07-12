@@ -21,8 +21,12 @@
                         <span>All departments</span>
                     </div>
                     <ul>
-                        <li><a href="#">Fresh Meat</a></li>
-                        <li><a href="#">Vegetables</a></li>
+                        {{ dd($levantest) }}
+                        @foreach ($productCategories as $productCategory)
+                            <li><a href="#">{{ $productCategory->name }}</a></li>
+                        @endforeach
+
+                        {{-- <li><a href="#">Vegetables</a></li>
                         <li><a href="#">Fruit & Nut Gifts</a></li>
                         <li><a href="#">Fresh Berries</a></li>
                         <li><a href="#">Ocean Foods</a></li>
@@ -31,7 +35,7 @@
                         <li><a href="#">Fresh Onion</a></li>
                         <li><a href="#">Papayaya & Crisps</a></li>
                         <li><a href="#">Oatmeal</a></li>
-                        <li><a href="#">Fresh Bananas</a></li>
+                        <li><a href="#">Fresh Bananas</a></li> --}}
                     </ul>
                 </div>
             </div>
@@ -127,22 +131,27 @@
             </div>
         </div>
         <div class="row featured__filter">
-            <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                <div class="featured__item">
-                    <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-1.jpg">
-                        <ul class="featured__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="featured__item__text">
-                        <h6><a href="#">Crab Pool Security</a></h6>
-                        <h5>$30.00</h5>
+            @foreach ($products as $product)
+                <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                    <div class="featured__item">
+                        @php
+                            $imageLink = (is_null($product->image_url) || !file_exists("images/" . $product->image_url)) ? 'default-product-image.png' : $product->image_url;
+                        @endphp
+                        <div class="featured__item__pic set-bg" data-setbg="{{ asset('images/'.$imageLink) }}">
+                            <ul class="featured__item__pic__hover">
+                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="featured__item__text">
+                            <h6><a href="{{ route('product.detail', ['slug' => $product->slug]) }}">{{ $product->name }}</a></h6>
+                            <h5>${{ number_format($product->price, 2) }}</h5>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
+            @endforeach
+            {{-- <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-2.jpg">
                         <ul class="featured__item__pic__hover">
@@ -246,7 +255,7 @@
                         <h5>$30.00</h5>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </section>
