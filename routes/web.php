@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
 use App\Http\Controllers\ProfileController;
@@ -34,15 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-// Route::get('home', function (){
-//     return '<h1>Home</h1>';
-// });
-
-// Route::get('admin', function (){
-//     return '<h1>Admin</h1>';
-// })->name('admin');
-
 require __DIR__.'/auth.php';
 
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -62,9 +54,8 @@ Route::get('product-list', function(){
 });
 Route::get('product/{slug}', [ClientProductController::class, 'getProductBySlug'])->name('product.detail');
 
-Route::get('cart', function(){
-    return view('client.pages.cart');
-});
+Route::get('cart', [CartController::class, 'index'])->name('cart.index');
+
 Route::get('checkout', function(){
     return view('client.pages.checkout');
 });
@@ -119,12 +110,5 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
 
 });
 
-
-
-Route::get('chivas',function (){
-    return '<h1>chivas</h1>';
-})->middleware('age.18');
-
-Route::get('cocacola',function (){
-    return '<h1>cocacola</h1>';
-});
+//Cart
+Route::get('product/add-to-cart/{productId}', [CartController::class, 'addProductToCart'])->name('product.add-to-cart');

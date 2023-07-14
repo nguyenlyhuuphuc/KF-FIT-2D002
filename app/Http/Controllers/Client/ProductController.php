@@ -12,10 +12,10 @@ class ProductController extends Controller
     public function getProductBySlug(string $slug){
         $product = Product::where('slug', $slug)->first();
 
-        $productCategories = ProductCategory::latest()->get()->filter(function($productCategory){
-            return $productCategory->products->count() > 0;
-        })->take(10);
+        // $productCategories = ProductCategory::latest()->get()->filter(function($productCategory){
+        //     return $productCategory->products->count() > 0;
+        // })->take(10);
 
-        return view('client.pages.product_detail', compact('product', 'productCategories'));
+        return view('client.pages.product_detail', compact('product'));
     }
 }

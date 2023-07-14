@@ -21,7 +21,6 @@
                         <span>All departments</span>
                     </div>
                     <ul>
-                        {{ dd($levantest) }}
                         @foreach ($productCategories as $productCategory)
                             <li><a href="#">{{ $productCategory->name }}</a></li>
                         @endforeach
@@ -141,7 +140,7 @@
                             <ul class="featured__item__pic__hover">
                                 <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                 <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                <li><a class="product-add-to-cart" data-url="{{ route('product.add-to-cart', ['productId' => $product->id]) }}" href="#"><i  class="fa fa-shopping-cart"></i></a></li>
                             </ul>
                         </div>
                         <div class="featured__item__text">
@@ -544,4 +543,26 @@
     </div>
 </section>
 <!-- Blog Section End -->
+@endsection
+
+@section('js-custom')
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.product-add-to-cart').on('click', function(event){
+                event.preventDefault();
+                var url = $(this).data('url');
+
+                $.ajax({
+                    method: 'GET', //method of form
+                    url: url, // action of form
+                    success: function(res) {
+                        Swal.fire({
+                            icon: 'success',
+                            text: res.message,
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
